@@ -1,4 +1,5 @@
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 from scipy.signal import butter, sosfreqz
 
@@ -28,3 +29,29 @@ def plot_filter_response(sos, fs, title="Filter Frequency Response"):
     plt.grid(True, which='both', linestyle='--', linewidth=0.5)
     plt.tight_layout()
     plt.legend()
+
+
+import numpy as np
+
+def export_sos_to_cmsis_header(sos, file_path="cmsis_filter_coeffs.h", var_name="filter_coeffs"):
+    assert sos.shape[1] == 6, "Expected SOS with 6 coefficients per row"
+
+    coeffs = []
+    for i, section in enumerate(sos):
+        b0, b1, b2, a0, a1, a2 = section
+        assert np.isclose(a0, 1.0), f"Section {i}: a0 != 1.0 (got {a0})"
+        coeffs.extend([b0, b1, b2, -a1, -a2])
+
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+    # Write header file
+    with open(file_path, "w") as f:
+        f.write(f"// Auto-generated CMSIS-DSP biquad coefficients\n")
+        f.write(f"#ifndef {var_name.upper()}_H\n#define {var_name.upper()}_H\n\n")
+        f.write(f"#define NUM_STAGES ({sos.shape[0]})\n\n")
+        f.write(f"float {var_name}[] = {{\n")
+        for i, val in enumerate(coeffs):
+            f.write(f"    {val:.8f},\n")
+        f.write("};\n\n#endif\n")
+
+    print(f"CMSIS coeffs written to: {file_path} with array name: {var_name}")

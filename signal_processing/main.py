@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.signal import sosfilt
 
 from src.utils import load_wav, plot_waveform
-from src.filters import design_bandpass_iir, design_lowpass_iir, plot_filter_response
+from src.filters import design_bandpass_iir, design_lowpass_iir, plot_filter_response, export_sos_to_cmsis_header
 from src.features import detect_peaks_npointaverage, plot_peaks
 
 
@@ -42,5 +42,9 @@ plot_waveform(smoothed_envelope, fs, "Smoothed Envelope")
 plot_waveform(bandpass_audio, fs, "BandPass Filtered Audio")
 plot_peaks(smoothed_envelope, fs, locs, peaks, title="Smoothed Envelope with Detected Peaks")
 
+#Export Filter co-effiecients
+export_sos_to_cmsis_header(sos_bandpass, "output/bandpass_coeffs", "bandpass_coeffs")
+export_sos_to_cmsis_header(sos_lowpass, "output/lowpass_coeffs", "lowpass_coeffs")
 
+print(sos_lowpass)
 plt.show()

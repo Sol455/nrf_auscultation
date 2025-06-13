@@ -1,3 +1,10 @@
 build*/
 .vscode/settings.json
 firmware/.vscode/settings.json
+signal_processing/output/lowpass_coeffs
+signal_processing/output/bandpass_coeffs
+*.pyc
+signal_processing/src/__pycache__/features.cpython-313.pyc
+signal_processing/src/__pycache__/filters.cpython-313.pyc
+signal_processing/src/__pycache__/utils.cpython-313.pyc
+*.pyc
