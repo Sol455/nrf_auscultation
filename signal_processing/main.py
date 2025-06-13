@@ -4,7 +4,7 @@ from scipy.signal import sosfilt
 
 from src.utils import load_wav, plot_waveform
 from src.filters import design_bandpass_iir, design_lowpass_iir, plot_filter_response, export_sos_to_cmsis_header
-from src.features import detect_peaks_npointaverage, plot_peaks, extract_rms_around_peaks
+from src.features import detect_peaks_npointaverage, plot_peaks, extract_features_around_peaks
 
 
 wav_path = "data/MAY.wav"
@@ -35,9 +35,7 @@ smoothed_envelope = sosfilt(sos_lowpass, abs_signal)
 
 locs, peaks = detect_peaks_npointaverage(smoothed_envelope, 3, 4000)
 
-rms_values = extract_rms_around_peaks(bandpass_audio, locs, rms_window_size, 0)
-print(rms_values)
-
+rms_values, centroids = extract_features_around_peaks(bandpass_audio, locs, rms_window_size, fs, 0, True)
 
 #======================================================================================
 
